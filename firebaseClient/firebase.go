@@ -48,9 +48,9 @@ func AddUser(user *User) bool {
 		CreateClient()
 	}
 
-	_, _, err := client.Collection("Users").Add(ctx, map[string]interface{}{
+	_, err := client.Collection("Users").Doc(user.Email).Set(ctx, map[string]interface{}{
 		"username": user.Username,
-		"mail":     user.Email,
+		"email":    user.Email,
 		"gender":   user.Gender,
 	})
 	if err != nil {
