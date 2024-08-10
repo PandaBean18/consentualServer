@@ -12,13 +12,22 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func CreateClient() *firestore.Client {
+type User struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Gender   string `json:"gender"`
+}
+
+var client *firestore.Client = nil
+var ctx context.Context = nil
+
+func CreateClient() {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error while loading the env file: ", err)
 	}
 
-	ctx := context.Background()
+	ctx = context.Background()
 	sa := option.WithCredentialsFile(os.Getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 
 	app, err := firebase.NewApp(ctx, nil, sa)
@@ -26,10 +35,29 @@ func CreateClient() *firestore.Client {
 		log.Fatal("Error while initializing app: ", err)
 	}
 
-	client, err := app.Firestore(ctx)
+	firestoreClient, err := app.Firestore(ctx)
 	if err != nil {
 		log.Fatal("Error while initializing firestore: ", err)
 	}
 
-	return client
+	client = firestoreClient
+}
+
+func AddUser(user *User) bool {
+	if client == nil {
+		CreateClient()
+	}
+
+	_, _, err := client.Collection("Users").Add(ctx, map[string]interface{}{
+		"username": user.Username,
+		"mail":     user.Email,
+		"gender":   user.Gender,
+	})
+	if err != nil {
+		print(err, "\n")
+		log.Fatal(err)
+		return false
+	}
+
+	return true
 }
