@@ -5,13 +5,14 @@ import (
 	"log"
 	"os"
 
+	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go/v4"
 	"google.golang.org/api/option"
 
 	"github.com/joho/godotenv"
 )
 
-func CreateClient() {
+func CreateClient() *firestore.Client {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error while loading the env file: ", err)
@@ -30,5 +31,5 @@ func CreateClient() {
 		log.Fatal("Error while initializing firestore: ", err)
 	}
 
-	defer client.Close()
+	return client
 }
