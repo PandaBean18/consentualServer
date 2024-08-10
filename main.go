@@ -3,6 +3,8 @@ package main
 import (
 	"net/http"
 
+	"server/firebaseClient"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -17,5 +19,9 @@ func main() {
 
 	r.Use(middleware.Logger)
 	r.Get("/", getHome)
+
+	firebaseClient.CreateClient()
+
 	http.ListenAndServe(":3000", r)
+
 }
