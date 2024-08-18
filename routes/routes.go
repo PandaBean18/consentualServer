@@ -23,6 +23,7 @@ func GetHome(resWriter http.ResponseWriter, req *http.Request) {
 func addUser(resWriter http.ResponseWriter, req *http.Request) {
 	user := &firebaseClient.User{}
 	err := json.NewDecoder(req.Body).Decode(user)
+
 	if err != nil {
 		print(err)
 	}

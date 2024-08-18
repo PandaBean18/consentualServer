@@ -15,5 +15,4 @@ func main() {
 	r.Use(middleware.Logger)
 	routes.RegisterRoutes(&r)
 	http.ListenAndServe(":3000", r)
-
 }
