@@ -1,6 +1,8 @@
 package firebaseClient
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"log"
 )
 
@@ -8,6 +10,16 @@ type User struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Gender   string `json:"gender"`
+}
+
+func createUserId() (string, error) {
+	bytes := make([]byte, 8)
+	_, err := rand.Read(bytes)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.StdEncoding.EncodeToString(bytes), nil
 }
 
 func AddUser(user *User, userId *string) *string {
@@ -22,12 +34,16 @@ func AddUser(user *User, userId *string) *string {
 	}
 
 	if userSnap.Exists() {
-		//userId = *(userSnap.Data())
 		*userId = userSnap.Data()["userId"].(string)
 		return userId
 	} else {
+		id, idErr := createUserId()
+		if idErr != nil {
+			log.Print("Error while creating userId.")
+			return userId
+		}
 		_, err := client.Collection("Users").Doc(user.Email).Set(ctx, map[string]interface{}{
-			"userId":   "someRandomIdForNow",
+			"userId":   id,
 			"username": user.Username,
 			"email":    user.Email,
 			"gender":   user.Gender,
@@ -38,7 +54,7 @@ func AddUser(user *User, userId *string) *string {
 			log.Fatal(err)
 			return userId
 		}
-		*userId = "someRandomIdForNow"
+		*userId = id
 	}
 
 	return userId
