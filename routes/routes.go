@@ -2,6 +2,7 @@ package routes
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"server/firebaseClient"
 
@@ -28,15 +29,17 @@ func addUser(resWriter http.ResponseWriter, req *http.Request) {
 		print(err)
 	}
 
-	var result bool = firebaseClient.AddUser(user)
-	if !result {
+	userId := ""
+
+	var result *string = firebaseClient.AddUser(user, &userId)
+	if *result == "" {
 		resWriter.Header().Set("Content-Type", "application/json")
 		resWriter.WriteHeader(500)
 		resWriter.Write([]byte(`{"error": "Something went wrong while trying to add user."}`))
 	} else {
 		resWriter.Header().Set("Content-Type", "application/json")
 		resWriter.WriteHeader(200)
-		resWriter.Write([]byte(`{"message": "User added."}`))
+		resWriter.Write([]byte(fmt.Sprintf(`{"userId": %s}`, *result)))
 	}
 	//resWriter.Write([]byte("lmao"))
 }
