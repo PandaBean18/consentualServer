@@ -10,6 +10,8 @@ type User struct {
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Gender   string `json:"gender"`
+	Dob      string `json:"dob"`
+	Age      string `json:"age"`
 }
 
 func createUserId() (string, error) {
@@ -42,11 +44,15 @@ func AddUser(user *User, userId *string) *string {
 			log.Print("Error while creating userId.")
 			return userId
 		}
+
+		print(user.Dob)
 		_, err := client.Collection("Users").Doc(user.Email).Set(ctx, map[string]interface{}{
 			"userId":   id,
 			"username": user.Username,
 			"email":    user.Email,
 			"gender":   user.Gender,
+			"dob":      user.Dob,
+			"age":      user.Age,
 		})
 
 		if err != nil {

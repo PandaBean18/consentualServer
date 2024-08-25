@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"server/firebaseClient"
 
-	//"server/firebaseClient"
-
 	"github.com/go-chi/chi/v5"
 )
 
@@ -41,5 +39,4 @@ func addUser(resWriter http.ResponseWriter, req *http.Request) {
 		resWriter.WriteHeader(200)
 		resWriter.Write([]byte(fmt.Sprintf(`{"userId": "%s"}`, *result)))
 	}
-	//resWriter.Write([]byte("lmao"))
 }
