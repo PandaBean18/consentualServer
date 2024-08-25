@@ -39,7 +39,7 @@ func addUser(resWriter http.ResponseWriter, req *http.Request) {
 	} else {
 		resWriter.Header().Set("Content-Type", "application/json")
 		resWriter.WriteHeader(200)
-		resWriter.Write([]byte(fmt.Sprintf(`{"userId": %s}`, *result)))
+		resWriter.Write([]byte(fmt.Sprintf(`{"userId": "%s"}`, *result)))
 	}
 	//resWriter.Write([]byte("lmao"))
 }
