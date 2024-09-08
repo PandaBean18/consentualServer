@@ -21,7 +21,9 @@ func createUserId() (string, error) {
 		return "", err
 	}
 
-	return base64.StdEncoding.EncodeToString(bytes), nil
+	id := base64.StdEncoding.EncodeToString(bytes)
+
+	return id[:(len(id) - 1)], nil
 }
 
 func AddUser(user *User, userId *string) *string {
